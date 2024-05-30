@@ -16,9 +16,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Application
-        run: npm run build  # Assuming you have a build script defined in your package.json
-
       - name: Install pm2
         run: npm install pm2 -g
 
