@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Deployment
 
 on:
   push:
@@ -6,31 +6,12 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Install pm2
-        run: npm install pm2 -g
-
-      - name: Start Application with pm2
-        run: pm2 start index.js --name="nodeapp"  # Start Node.js application with pm2 in the background
-
-      - name: Set up ngrok
-        run: |
-          curl -sO https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
-          unzip ngrok-stable-linux-amd64.zip
-          export NGROK_AUTH_TOKEN=2hB0PRdEiRSWe91TkJS48GqjCJd_gSjE8vZHDd2VmZCiS4aw
-          ./ngrok authtoken $NGROK_AUTH_TOKEN
-
-      - name: Deploy Application
-        run: |
-          ./ngrok http 3000 &  # Start ngrok tunnel in the background
-          sleep 5  # Wait for ngrok to establish the tunnel
-          curl -s localhost:4040/api/tunnels | grep -oP '\"public_url\":\"\Khttps://[a-zA-Z0-9]*\.ngrok\.io\"'
+      - name: Run Deployment Script
+        run: bash deploy.sh
