@@ -13,5 +13,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Run Deployment Script
-        run: bash deploy.sh
+      - name: Install Dependencies
+        run: |
+          echo "Installing dependencies..."
+          npm install
+          echo "Dependencies installed successfully."
+
+      - name: Start Node.js Server
+        run: |
+          echo "Starting Node.js server..."
+          npm start &
+          echo "Node.js server started successfully."
+
+      - name: Wait for Server to Start
+        run: sleep 5  # Adjust sleep time if needed
+
+      - name: Deploy Using ngrok
+        run: |
+          echo "Deploying using ngrok..."
+          ngrok http http://localhost:5500
