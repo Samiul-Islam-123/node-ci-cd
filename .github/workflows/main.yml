@@ -17,8 +17,17 @@ jobs:
         run: npm install
 
       - name: Build Application
-        run: node index.js
+        run: npm start  # Using 'npm start' to run your application with nodemon
+
+      - name: Set up ngrok
+        run: |
+          curl -sO https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+          unzip ngrok-stable-linux-amd64.zip
+          export NGROK_AUTH_TOKEN=2hB0PRdEiRSWe91TkJS48GqjCJd_gSjE8vZHDd2VmZCiS4aw
+          ./ngrok authtoken $NGROK_AUTH_TOKEN
 
       - name: Deploy Application
-        run: 
-           ngrok http 5500
+        run: |
+          ./ngrok http 5500 &
+          sleep 5  # Wait for ngrok to establish the tunnel
+          curl -s localhost:4040/api/tunnels | grep -oP '\"public_url\":\"\Khttps://[a-zA-Z0-9]*\.ngrok\.io\"'
