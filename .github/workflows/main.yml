@@ -17,7 +17,13 @@ jobs:
         run: npm install
 
       - name: Build Application
-        run: npm start  # Using 'npm start' to run your application with nodemon
+        run: npm run build  # Assuming you have a build script defined in your package.json
+
+      - name: Install pm2
+        run: npm install pm2 -g
+
+      - name: Start Application with pm2
+        run: pm2 start index.js --name="nodeapp"  # Start Node.js application with pm2 in the background
 
       - name: Set up ngrok
         run: |
@@ -28,6 +34,6 @@ jobs:
 
       - name: Deploy Application
         run: |
-          ./ngrok http 5500 &
+          ./ngrok http 3000 &  # Start ngrok tunnel in the background
           sleep 5  # Wait for ngrok to establish the tunnel
           curl -s localhost:4040/api/tunnels | grep -oP '\"public_url\":\"\Khttps://[a-zA-Z0-9]*\.ngrok\.io\"'
